@@ -13,12 +13,14 @@
 
 <form method="post" action="{{ action('ReservationController@store') }}">
     @csrf
-    <select name="book_id">
+    <select name="book_id" value="{{ old('book_id')}}">
         @foreach($books as $book)
-            <option value="{{ $book->id }}">{{ $book->title }}</option>
+            <option value="{{ $book->id }}" {{old("book_id") == $book->id ? "selected":""}}>
+                {{ $book->title }}
+            </option>
         @endforeach
     </select>
-    <input type="date" name="from" value="{{ old('from') }}">
-    <input type="date" name="to" value="{{ old('to') }}">
+    From<input type="date" name="from" value="{{ old('from') }}">
+    To<input type="date" name="to" value="{{ old('to') }}">
     <input type="submit" value="Create">
 </form>

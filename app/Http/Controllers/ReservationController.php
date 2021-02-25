@@ -42,19 +42,19 @@ class ReservationController extends Controller
             'to'      => 'required|date',
         ]);
 
+
         $from = $request->input('from');
         $to   = $request->input('to');
+        $book_id = $request->input('book_id');
 
-        if (
-            Reservation::where('from', '<=', $from)
-                ->where('to', '>=', $from)
-                ->orWhere('from', '<=', $to)
-                ->where('to', '>=', $to)
-                ->count() > 0) {
-
-            return Redirect::back()->withInput()->withErrors(['from' => 'Overlapping reservation']);
+        $reservations = Reservation::where('book_id', $book_id)->get();
+        foreach($reservations as $res) {
+            if($res->book_id == $book_id) {
+                if((($res->to >= $from) && ($res->to <=$to)) || (($res->from >= $from) && ($res->from <=$to))) {
+                    return Redirect::back()->withInput()->withErrors(['from' => 'Overlapping reservation']);
+                }
+            }
         }
-
 
         $data              = $request->all();
         $data[ 'user_id' ] = Auth::id();
