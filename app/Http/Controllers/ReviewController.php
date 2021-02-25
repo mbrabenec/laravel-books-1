@@ -95,6 +95,12 @@ class ReviewController extends Controller
      */
     public function destroy($book_id, $review_id)
     {
+        $review = Review::findOrFail($review_id);
 
+        $review->delete();
+
+        session()->flash('success_message', 'The review was successfully deleted');
+
+        return redirect()->action('BookController@show', $book_id);
     }
 }

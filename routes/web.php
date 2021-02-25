@@ -24,8 +24,23 @@ Route::get('/books/{id}', 'BookController@show');
 
 Route::post('books/{id}/review', 'ReviewController@store');
 
-Route::get('books/{book_id}/reviews/{review_id}', 'ReviewController@destroy');
+// Route::get('books/{book_id}/reviews/{review_id}', 'ReviewController@destroy');
 
+
+// administration
+Route::group(['middleware' => [
+    'can:admin'
+]], function() {
+
+    // all admin routes belong inside here:
+    Route::delete('/reviews/delete/{book_id}/{review_id}', 'ReviewController@destroy');
+});
+
+
+// orders
+Route::post('/order/{book_id}', 'OrderController@order');
+Route::get('/orders', 'OrderController@index');
+Route::get('/orders/{order_id}', 'OrderController@show');
 
 
 Route::get('/publishers', 'PublisherController@index');
